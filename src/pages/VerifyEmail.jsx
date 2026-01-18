@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { verifyEmail } from "../api/api";
+import { Alert, AlertDescription } from "../components/ui/alert";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { CheckCircle, MailCheck } from "lucide-react";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState("");
@@ -11,7 +22,6 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get email from navigation state (passed from Register page)
   const email = location.state?.email || "";
 
   const handleSubmit = async (e) => {
@@ -22,10 +32,9 @@ const VerifyEmail = () => {
     try {
       await verifyEmail({ email, code });
       setSuccess(true);
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 1800);
     } catch (err) {
       setError(
         err.response?.data?.detail || "Verification failed. Please try again.",
@@ -37,97 +46,74 @@ const VerifyEmail = () => {
 
   if (!email) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            No email provided
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Please register first to verify your email.
-          </p>
-          <Link
-            to="/register"
-            className="text-blue-600 hover:text-blue-500 font-medium"
-          >
-            Go to Register
-          </Link>
-        </div>
+      <div className="mx-auto flex min-h-[60vh] max-w-lg items-center">
+        <Card className="w-full text-center">
+          <CardHeader>
+            <CardTitle>No email provided</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Please register first so we know where to send your verification
+              code.
+            </p>
+            <Button asChild>
+              <Link to="/register">Go to register</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white p-8 rounded-lg shadow-md">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <div className="mx-auto h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M3 8l7. 89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              Verify your email
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              We sent a verification code to <br />
-              <span className="font-medium">{email}</span>
-            </p>
+    <div className="mx-auto flex min-h-[70vh] max-w-xl items-center">
+      <Card className="w-full">
+        <CardHeader className="space-y-2 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <MailCheck className="h-6 w-6" />
           </div>
-
-          {/* Success Message */}
+          <CardTitle className="text-2xl">Verify your email</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            We sent a verification code to{" "}
+            <span className="font-semibold">{email}</span>
+          </p>
+        </CardHeader>
+        <CardContent>
           {success ? (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-center">
-              <p className="font-medium">Email verified successfully!</p>
-              <p className="text-sm mt-1">Redirecting to login...</p>
-            </div>
+            <Alert className="flex items-start gap-3 border-green-200 bg-green-50 text-green-800">
+              <CheckCircle className="h-5 w-5" />
+              <AlertDescription>
+                Email verified successfully. Redirecting you to sign in...
+              </AlertDescription>
+            </Alert>
           ) : (
-            /* Verification Form */
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-                  {error}
-                </div>
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
 
-              <div>
-                <label
-                  htmlFor="code"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Verification Code
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="code">Verification code</Label>
+                <Input
                   id="code"
                   type="text"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter verification code"
+                  placeholder="Enter the 6-digit code"
                   required
+                  autoFocus
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-              >
-                {isLoading ? "Verifying..." : "Verify Email"}
-              </button>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Verifying..." : "Verify email"}
+              </Button>
             </form>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -1,4 +1,15 @@
 import { useState } from "react";
+import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 
 const TaskForm = ({ onSubmit, isLoading = false }) => {
   const [name, setName] = useState("");
@@ -41,91 +52,54 @@ const TaskForm = ({ onSubmit, isLoading = false }) => {
       console.error("Form submission error:", error);
     }
   };
+
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Create New Task
-      </h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>Create a task</CardTitle>
+        <CardDescription>Capture the work you want to track.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="task-name">
+              Task name <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="task-name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter task name"
+              disabled={isLoading}
+              aria-invalid={Boolean(errors.name)}
+            />
+            {errors.name && (
+              <p className="text-sm text-destructive">{errors.name}</p>
+            )}
+          </div>
 
-      {/* Name Field */}
-      <div className="mb-4">
-        <label
-          htmlFor="task-name"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Task Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          id="task-name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.name ? "border-red-500" : "border-gray-300"
-          }`}
-          placeholder="Enter task name"
-          disabled={isLoading}
-        />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-        )}
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="task-description">Description (optional)</Label>
+            <Textarea
+              id="task-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add notes or context"
+              disabled={isLoading}
+              aria-invalid={Boolean(errors.description)}
+            />
+            {errors.description && (
+              <p className="text-sm text-destructive">{errors.description}</p>
+            )}
+          </div>
 
-      {/* Description Field */}
-      <div className="mb-4">
-        <label
-          htmlFor="task-description"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Description (optional)
-        </label>
-        <textarea
-          id="task-description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.description ? "border-red-500" : "border-gray-300"
-          }`}
-          rows="3"
-          placeholder="Enter task description"
-          disabled={isLoading}
-        />
-        {errors.description && (
-          <p className="mt-1 text-sm text-red-500">{errors.description}</p>
-        )}
-      </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isLoading ? (
-          <span className="flex items-center justify-center">
-            <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-                fill="none"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-              />
-            </svg>
-            Creating...
-          </span>
-        ) : (
-          "Create Task"
-        )}
-      </button>
-    </form>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Creating..." : "Create task"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

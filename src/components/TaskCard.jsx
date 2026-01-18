@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 const TaskCard = ({ task, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -50,78 +54,66 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-      {isEditing ? (
-        /* EDIT MODE */
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Task Name *
-            </label>
-            <input
-              type="text"
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader>
+        <CardTitle className="text-xl leading-tight">{task.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {isEditing ? (
+          <div className="space-y-4">
+            <Input
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter task name (min 3 characters)"
+              placeholder="Task name"
+              autoFocus
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
+            <Textarea
               value={editedDescription}
               onChange={(e) => setEditedDescription(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows="3"
-              placeholder="Enter description (optional)"
+              placeholder="Description (optional)"
+              rows={3}
             />
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={handleSave} disabled={isLoading}>
+                {isLoading ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                onClick={handleCancel}
+                variant="ghost"
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={handleSave}
-              disabled={isLoading}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
-            >
-              {isLoading ? "Saving..." : "Save"}
-            </button>
-            <button
-              onClick={handleCancel}
-              disabled={isLoading}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
+        ) : (
+          <div className="space-y-3">
+            {task.description && (
+              <p className="text-muted-foreground leading-relaxed">
+                {task.description}
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={() => setIsEditing(true)}
+                variant="secondary"
+                size="sm"
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={handleDelete}
+                variant="destructive"
+                size="sm"
+                disabled={isLoading}
+              >
+                {isLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
           </div>
-        </div>
-      ) : (
-        /* VIEW MODE */
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            {task.name}
-          </h3>
-          {task.description && (
-            <p className="text-gray-600 mb-4">{task.description}</p>
-          )}
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm transition-colors"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={isLoading}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition-colors disabled:opacity-50"
-            >
-              {isLoading ? "Deleting..." : "Delete"}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

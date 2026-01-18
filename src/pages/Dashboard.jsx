@@ -1,6 +1,17 @@
+import { ClipboardList, BellRing } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getReminders, getTasks } from "../api/api";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -10,14 +21,9 @@ const Dashboard = () => {
   const [recentTasks, setRecentTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  /*
-   * FETCH DATA ON COMPONENT MOUNT
-   * useEffect runs after component renders
-   */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch both tasks and reminders in parallel
         const [tasks, reminders] = await Promise.all([
           getTasks(),
           getReminders(),
@@ -27,8 +33,6 @@ const Dashboard = () => {
           taskCount: tasks.length,
           reminderCount: reminders.length,
         });
-
-        // Get last 3 tasks for preview
         setRecentTasks(tasks.slice(-3).reverse());
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
@@ -38,137 +42,113 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, []); // Empty dependency array = run once on mount
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-72" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+        </div>
+        <Skeleton className="h-56" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Welcome Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">
           Welcome to Task Manager
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p className="text-muted-foreground">
           Here's an overview of your tasks and reminders.
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Tasks Card */}
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 uppercase">
-                Total Tasks
-              </p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
-                {stats.taskCount}
-              </p>
+              <CardTitle className="text-lg">Total tasks</CardTitle>
+              <CardDescription>
+                Everything you need to get done.
+              </CardDescription>
             </div>
-            <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+            <div className="rounded-full bg-primary/10 p-3 text-primary">
+              <ClipboardList className="h-5 w-5" />
             </div>
-          </div>
-          <Link
-            to="/tasks"
-            className="inline-block mt-4 text-sm text-blue-600 hover:text-blue-500"
-          >
-            View all tasks →
-          </Link>
-        </div>
+          </CardHeader>
+          <CardContent className="flex items-center justify-between pt-4">
+            <p className="text-3xl font-semibold">{stats.taskCount}</p>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/tasks">View tasks</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-        {/* Reminders Card */}
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
-          <div className="flex items-center justify-between">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 uppercase">
-                Total Reminders
-              </p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
-                {stats.reminderCount}
-              </p>
+              <CardTitle className="text-lg">Total reminders</CardTitle>
+              <CardDescription>
+                Don't let important things slip.
+              </CardDescription>
             </div>
-            <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
-              <svg
-                className="h-6 w-6 text-yellow-600"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
+            <div className="rounded-full bg-amber-100 p-3 text-amber-600">
+              <BellRing className="h-5 w-5" />
             </div>
-          </div>
-          <Link
-            to="/reminders"
-            className="inline-block mt-4 text-sm text-yellow-600 hover:text-yellow-500"
-          >
-            View all reminders →
-          </Link>
-        </div>
+          </CardHeader>
+          <CardContent className="flex items-center justify-between pt-4">
+            <p className="text-3xl font-semibold">{stats.reminderCount}</p>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/reminders">View reminders</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Recent Tasks Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Tasks</h2>
-          <Link
-            to="/tasks"
-            className="text-sm text-blue-600 hover:text-blue-500"
-          >
-            View all
-          </Link>
-        </div>
-
-        {recentTasks.length > 0 ? (
-          <ul className="divide-y divide-gray-200">
-            {recentTasks.map((task) => (
-              <li key={task.id} className="py-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {task.name}
-                    </p>
-                    {task.description && (
-                      <p className="text-sm text-gray-500 truncate max-w-md">
-                        {task.description}
-                      </p>
-                    )}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg">Recent tasks</CardTitle>
+            <CardDescription>Last three items you've created.</CardDescription>
+          </div>
+          <Button asChild variant="link" className="px-0">
+            <Link to="/tasks">View all</Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {recentTasks.length > 0 ? (
+            <ul className="space-y-3">
+              {recentTasks.map((task) => (
+                <li key={task.id} className="rounded-md border bg-card/60 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-medium leading-tight">{task.name}</p>
+                      {task.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {task.description}
+                        </p>
+                      )}
+                    </div>
+                    <Badge variant="secondary">Task</Badge>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500 text-center py-4">
-            No tasks yet.{" "}
-            <Link to="/tasks" className="text-blue-600 hover:text-blue-500">
-              Create your first task
-            </Link>
-          </p>
-        )}
-      </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="rounded-md border border-dashed bg-muted/50 p-6 text-center">
+              <p className="text-muted-foreground">No tasks yet.</p>
+              <Button asChild variant="link" className="mt-1 px-0">
+                <Link to="/tasks">Create your first task</Link>
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

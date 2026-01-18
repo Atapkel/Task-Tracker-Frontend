@@ -1,17 +1,21 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import './index.css';
-// Components
-import Navbar from './components/Navbar';
-import ProtectedRoute from './components/ProtectedRoute';
-
-// Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
-import Dashboard from './pages/Dashboard';
-import Tasks from './pages/Tasks';
-import Reminders from './pages/Reminders';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import "./index.css";
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { Button } from "./components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
+import Dashboard from "./pages/Dashboard";
+import Tasks from "./pages/Tasks";
+import Reminders from "./pages/Reminders";
 
 /*
  * APP COMPONENT
@@ -32,23 +36,15 @@ function App() {
        */}
       <AuthProvider>
         {/* Main Layout */}
-        <div className="min-h-screen bg-gray-100">
-          {/* Navigation - shown on all pages */}
+        <div className="min-h-screen bg-background">
           <Navbar />
 
-          {/* Main Content Area */}
-          <main>
-            {/*
-             * ROUTES
-             * Define which component renders for each URL path
-             */}
+          <main className="container py-8">
             <Routes>
-              {/* Public Routes - accessible to everyone */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
 
-              {/* Protected Routes - require authentication */}
               <Route
                 path="/dashboard"
                 element={
@@ -74,24 +70,23 @@ function App() {
                 }
               />
 
-              {/* Default Route - redirect to dashboard */}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-              {/* 404 - Catch all unknown routes */}
               <Route
                 path="*"
                 element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-4xl font-bold text-gray-800 mb-4">404</h1>
-                      <p className="text-gray-600 mb-4">Page not found</p>
-                      <a
-                        href="/dashboard"
-                        className="text-blue-600 hover:text-blue-500"
-                      >
-                        Go to Dashboard
-                      </a>
-                    </div>
+                  <div className="flex items-center justify-center py-16">
+                    <Card className="max-w-md w-full">
+                      <CardHeader className="text-center">
+                        <CardTitle className="text-3xl">404</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 text-center">
+                        <p className="text-muted-foreground">Page not found</p>
+                        <Button asChild>
+                          <a href="/dashboard">Go to dashboard</a>
+                        </Button>
+                      </CardContent>
+                    </Card>
                   </div>
                 }
               />
