@@ -89,7 +89,7 @@ const Dashboard = () => {
           </div>
           <Link
             to="/tasks"
-            className="inline-block mt-4 text-sm text-blue-600 hover: text-blue-500"
+            className="inline-block mt-4 text-sm text-blue-600 hover:text-blue-500"
           >
             View all tasks →
           </Link>

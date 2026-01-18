@@ -60,7 +60,7 @@ const TaskForm = ({ onSubmit, isLoading = false }) => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus: ring-blue-500 ${
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.name ? "border-red-500" : "border-gray-300"
           }`}
           placeholder="Enter task name"
@@ -83,7 +83,7 @@ const TaskForm = ({ onSubmit, isLoading = false }) => {
           id="task-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus: ring-blue-500 ${
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.description ? "border-red-500" : "border-gray-300"
           }`}
           rows="3"

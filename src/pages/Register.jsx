@@ -102,7 +102,7 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-medium text-blue-600 hover: text-blue-500"
+              className="font-medium text-blue-600 hover:text-blue-500"
             >
               Sign in
             </Link>
@@ -159,7 +159,7 @@ const Register = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`block w-full px-3 py-2 border rounded-md focus: outline-none focus: ring-blue-500 focus:border-blue-500 ${
+                className={`block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="you@example.com"
@@ -207,7 +207,7 @@ const Register = () => {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus: border-blue-500 ${
+                className={`block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Create a password"

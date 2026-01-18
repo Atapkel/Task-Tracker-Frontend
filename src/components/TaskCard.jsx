@@ -49,7 +49,7 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
     setIsEditing(false);
   };
 
-   return (
+  return (
     <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
       {isEditing ? (
         /* EDIT MODE */
@@ -72,7 +72,7 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
             </label>
             <textarea
               value={editedDescription}
-              onChange={(e) => setEditedDescription(e. target.value)}
+              onChange={(e) => setEditedDescription(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="3"
               placeholder="Enter description (optional)"
@@ -82,9 +82,9 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
             <button
               onClick={handleSave}
               disabled={isLoading}
-              className="bg-green-500 hover: bg-green-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
             >
-              {isLoading ?  'Saving.. .' : 'Save'}
+              {isLoading ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancel}
@@ -114,16 +114,15 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
             <button
               onClick={handleDelete}
               disabled={isLoading}
-              className="bg-red-500 hover: bg-red-600 text-white px-4 py-2 rounded-md text-sm transition-colors disabled:opacity-50"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition-colors disabled:opacity-50"
             >
-              {isLoading ? 'Deleting.. .' : 'Delete'}
+              {isLoading ? "Deleting..." : "Delete"}
             </button>
           </div>
         </div>
       )}
-    </div>);
-
+    </div>
+  );
 };
-
 
 export default TaskCard;

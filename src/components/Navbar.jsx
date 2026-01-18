@@ -13,7 +13,7 @@ const NavBar = () => {
   return (
     <nav className="bg-blue-600 text-white shadow-lg">
       {/* Container with max-width and padding */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg: px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Flex container for nav items */}
         <div className="flex justify-between h-16 items-center">
           {/* Logo/Brand */}
